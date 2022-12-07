@@ -1,0 +1,67 @@
+# Containers:
+services:
+
+  # Service for the database: 
+  my-sql-service: 
+
+    # MySQL Image: 
+    image: mysql:5.7
+
+    # MySQL Environment Variables: 
+    environment:
+      - MYSQL_HOST=localhost    # internally for the container.
+      - MYSQL_USER=Moishe
+      - MYSQL_PASSWORD=4578-28IsTheBest
+      - MYSQL_ROOT_PASSWORD=4578-28IsTheBest # needed by MySQL images
+      - MYSQL_DATABASE=northwind
+
+    # Port binding:
+    ports:
+      - 3306:3306
+
+    # Volumes:
+    volumes:
+
+      # named volume for the database itself:
+      - northiwnd-db:/var/lib/mysql
+
+      # host-volume pointing on db-init folder for creating initial database: 
+      - .\src\1-assets\db-init:/docker-entrypoint-initdb.d
+
+    container_name: mysql-container
+
+# ----------------------------------------------------------------------------------
+
+  # Service name (which is like a container) name: 
+  simple-rest: 
+
+    # we're depending on mysql container:
+    depends_on:
+      - my-sql-service
+
+    # Image name:
+    image: georgeak/node-rest-api:1.0
+
+    # build the image if not exist:
+    build: .
+
+    # Port binding: 
+    ports:
+      - 3001:3001
+
+    # Environment Vairables:
+    environment:
+      - PORT=3001
+      - MYSQL_HOST=my-sql-service # the above service is the host name.
+      - MYSQL_USER=Moishe
+      - MYSQL_PASSWORD=4578-28IsTheBest
+      - MYSQL_DATABASE=northwind
+
+    # Container name: 
+    container_name: simple-rest
+
+# ------------------------------------------
+
+# List the named-volumes above: 
+volumes:
+  northiwnd-db:
