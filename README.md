@@ -5,6 +5,7 @@ An example of how to work with a mysql database with docker and upload products
 We need to restore the node_modules
 
 - npm i
+- docker-compose up -d
 
  # --docker commands--
  
